@@ -17,7 +17,7 @@ public class Order {
         String firstItemTitle = "";
         for (OrderItem item : items){
             itemCount += item.getCount();
-            totalPrice += item.getPrice();
+            totalPrice += item.getPrice()*item.getCount();
             if (firstItemTitle.equals("")){
                 firstItemTitle = item.getTitle();
             }
@@ -27,5 +27,12 @@ public class Order {
     public Order(Integer id,ArrayList<OrderItem> items){
         this.id = id;
         this.items = items;
+    }
+    public String toString(){
+        String result = "Order "+this.id+":\n";
+        for (OrderItem item : items){
+            result += item.toString()+"\n";
+        }
+        return result;
     }
 }

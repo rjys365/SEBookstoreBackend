@@ -10,11 +10,11 @@ public class OrderItem {
     public String getTitle(){
         return this.title;
     }
-    public OrderItem(Integer id,Integer count,Double price,String title){
+    public OrderItem(Integer id,Integer count){
         this.id = id;
         this.count = count;
-        this.price = price;
-        this.title = title;
+        this.price = BookConst.books[id].getPrice();
+        this.title = BookConst.books[id].getTitle();
     }
     public Integer getId(){
         return this.id;
@@ -24,6 +24,12 @@ public class OrderItem {
     }
     public Double getPrice(){
         return this.price;
+    }
+    public Double getSubTotal(){
+        return this.price*this.count;
+    }
+    public String toString(){
+        return "OrderItem "+this.id+", Count:"+this.count+", Price:"+this.price;
     }
 //    public Book getBook(){
 //        for (Book book : BookConst.books){
