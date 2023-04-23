@@ -31,4 +31,12 @@ public class OrderController {
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Order Not Found");
     }
+
+    @PostMapping("/newOrder")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Order newOrder(@RequestBody Order order){
+        //add(order);
+        System.out.println(order);
+        return order;
+    }
 }
