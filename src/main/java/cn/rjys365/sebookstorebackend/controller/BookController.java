@@ -1,10 +1,14 @@
 package cn.rjys365.sebookstorebackend.controller;
 
-import cn.rjys365.sebookstorebackend.datatypes.Book;
-import cn.rjys365.sebookstorebackend.util.BookConst;
+import cn.rjys365.sebookstorebackend.entities.Book;
+//import cn.rjys365.sebookstorebackend.util.BookConst;
+
+import cn.rjys365.sebookstorebackend.repositories.BookRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 
 @RestController
@@ -12,20 +16,30 @@ import org.springframework.web.server.ResponseStatusException;
 @CrossOrigin("http://localhost:3000")
 public class BookController {
 
+    private final BookRepository bookRepository;
+
+    public BookController(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
 
     @GetMapping("/allBooks")
-    public Book[] getAllBooks(){
-        return BookConst.books;
+    public Iterable<Book> getAllBooks(){
+        return this.bookRepository.findAll();
     }
 
 
 
     @GetMapping("/{id}")
-    public Book getBook(@PathVariable Integer id) {
-        for (Book book : BookConst.books) {
-            if (book.getId().equals(id)) {
-                return book;
-            }
+    public Book getBookById(@PathVariable Integer id) {
+//        for (Book book : BookConst.books) {
+//            if (book.getId().equals(id)) {
+//                return book;
+//            }
+//        }
+        Optional<Book> bookOptional=this.bookRepository.findById(id);
+        if(bookOptional.isPresent()){
+            return bookOptional.get();
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Book Not Found");
     }
