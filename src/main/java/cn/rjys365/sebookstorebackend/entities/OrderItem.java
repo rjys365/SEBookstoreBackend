@@ -1,6 +1,5 @@
 package cn.rjys365.sebookstorebackend.entities;
 
-import cn.rjys365.sebookstorebackend.util.BookConst;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
