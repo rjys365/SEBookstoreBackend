@@ -25,9 +25,11 @@ public class OrderController {
     }
 
     @GetMapping("/allOrders")
-    public ArrayList<OrderDigest> getAllOrdersDigest(){
+    public ArrayList<OrderDigest> getAllOrdersDigest(@RequestParam Integer userId){
         ArrayList<OrderDigest> digests = new ArrayList<>();
-        Iterable<Order> orders = this.orderRepository.findAll();
+        Iterable<Order> orders;
+        if(userId==null)orders = this.orderRepository.findAll();//TODO:security
+        else orders=this.orderRepository.findAllByUserId(userId);
         for(Order order:orders){
             digests.add(order.getDigest());
         }
