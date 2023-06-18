@@ -1,9 +1,12 @@
 package cn.rjys365.sebookstorebackend.controller;
 
+import cn.rjys365.sebookstorebackend.dao.BookDAO;
+import cn.rjys365.sebookstorebackend.dao.daoimpl.BookDAOImpl;
 import cn.rjys365.sebookstorebackend.entities.Book;
 //import cn.rjys365.sebookstorebackend.util.BookConst;
 
 import cn.rjys365.sebookstorebackend.repositories.BookRepository;
+import cn.rjys365.sebookstorebackend.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,16 +19,16 @@ import java.util.Optional;
 @CrossOrigin("http://localhost:3000")
 public class BookController {
 
-    private final BookRepository bookRepository;
+    private final BookService bookService;
 
-    public BookController(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
     }
 
 
     @GetMapping("/allBooks")
     public Iterable<Book> getAllBooks(){
-        return this.bookRepository.findAll();
+        return this.bookService.getAllBooks();
     }
 
 
@@ -37,7 +40,7 @@ public class BookController {
 //                return book;
 //            }
 //        }
-        Optional<Book> bookOptional=this.bookRepository.findById(id);
+        Optional<Book> bookOptional=this.bookService.getBookById(id);
         if(bookOptional.isPresent()){
             return bookOptional.get();
         }

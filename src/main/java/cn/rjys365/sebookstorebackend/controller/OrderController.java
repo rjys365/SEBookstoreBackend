@@ -1,10 +1,13 @@
 package cn.rjys365.sebookstorebackend.controller;
 
+import cn.rjys365.sebookstorebackend.dto.OrderDetailsDTO;
 import cn.rjys365.sebookstorebackend.entities.Book;
 import cn.rjys365.sebookstorebackend.entities.Order;
-import cn.rjys365.sebookstorebackend.datatypes.OrderDigest;
+import cn.rjys365.sebookstorebackend.dto.OrderDigest;
+import cn.rjys365.sebookstorebackend.exception.OrderServiceException;
 import cn.rjys365.sebookstorebackend.repositories.BookRepository;
 import cn.rjys365.sebookstorebackend.repositories.OrderRepository;
+import cn.rjys365.sebookstorebackend.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -16,50 +19,40 @@ import java.util.Optional;
 @RequestMapping("/orders/")
 @CrossOrigin("http://localhost:3000")
 public class OrderController {
-    private final OrderRepository orderRepository;
-    private final BookRepository bookRepository;
+    private final OrderService orderService;
 
-    public OrderController(OrderRepository orderRepository, BookRepository bookRepository) {
-        this.orderRepository = orderRepository;
-        this.bookRepository = bookRepository;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @GetMapping("/allOrders")
     public ArrayList<OrderDigest> getAllOrdersDigest(@RequestParam Integer userId){
-        ArrayList<OrderDigest> digests = new ArrayList<>();
-        Iterable<Order> orders;
-        if(userId==null)orders = this.orderRepository.findAll();//TODO:security
-        else orders=this.orderRepository.findAllByUserId(userId);
-        for(Order order:orders){
-            digests.add(order.getDigest());
-        }
+        Iterable<Order> orders=this.orderService.getAllOrdersByUserId(userId);
+        ArrayList<OrderDigest> digests=new ArrayList<>();
+        orders.forEach(order -> {
+            digests.add(new OrderDigest(order));
+        });
         return digests;
     }
 
     @GetMapping("/{id}")
-    public Order getOrder(@PathVariable Integer id){
-        Optional<Order> orderOptional=this.orderRepository.findById(id);
+    public OrderDetailsDTO getOrder(@PathVariable Integer id){
+        Optional<Order> orderOptional=this.orderService.getOrderById(id);
         if(orderOptional.isPresent()){
-            return orderOptional.get();
+            return new OrderDetailsDTO(orderOptional.get());
         }
-        System.out.println("not found");
+//        System.out.println("not found");
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Order Not Found");
     }
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public Order newOrder(@RequestBody Order order){
-        if(order.getItems()==null||order.getItems().isEmpty())throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Empty Order");
-        order.getItems().forEach(item->{
-            if(item.getCount()==null||item.getCount()<=0)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Invalid order item count");
-            item.setOrder(order);
-            Optional<Book> bookOptional = this.bookRepository.findById(item.getId());
-            if(bookOptional.isEmpty())throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Non-existent order item");
-            Book book = bookOptional.get();
-            item.setBook(book);
-        });
-        //System.out.println(order);
-        this.orderRepository.save(order);
-        return order;
+    public OrderDetailsDTO newOrder(@RequestBody Order order){
+        try{
+            return new OrderDetailsDTO(this.orderService.saveOrder(order));
+        }
+        catch(OrderServiceException e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,e.getMessage());
+        }
     }
 }
