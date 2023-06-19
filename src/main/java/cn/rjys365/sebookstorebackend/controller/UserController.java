@@ -1,7 +1,8 @@
 package cn.rjys365.sebookstorebackend.controller;
 
 import cn.rjys365.sebookstorebackend.dto.UserDigest;
-import cn.rjys365.sebookstorebackend.dto.UserLogin;
+import cn.rjys365.sebookstorebackend.dto.UserLoginResponse;
+import cn.rjys365.sebookstorebackend.dto.UserRegisterRequest;
 import cn.rjys365.sebookstorebackend.entities.User;
 import cn.rjys365.sebookstorebackend.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,8 @@ public class UserController {
         this.userService = userService;
     }
     @PostMapping("/login")
-    public UserLogin loginByUserNameAndPassword(@RequestParam String username, @RequestParam String password){
-        Optional<UserLogin> userLoginOptional = userService.loginByUsername(username, password);
+    public UserLoginResponse loginByUserNameAndPassword(@RequestParam String username, @RequestParam String password){
+        Optional<UserLoginResponse> userLoginOptional = userService.loginByUsername(username, password);
         if(userLoginOptional.isPresent()){
             return userLoginOptional.get();
         }
@@ -57,5 +58,15 @@ public class UserController {
             digests.add(new UserDigest(user));
         });
         return digests;
+    }
+
+    @PostMapping("/")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserLoginResponse addUser(@RequestBody UserRegisterRequest userRegisterRequest){
+        Optional<User> userOptional = userService.addUser(userRegisterRequest);
+        if(userOptional.isEmpty())throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Illegal register user operation");
+        var userLoginOptional=userService.loginByUsername(userRegisterRequest.getName(), userRegisterRequest.getPassword());
+        if(userLoginOptional.isEmpty())throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Illegal register user operation");
+        return userLoginOptional.get();
     }
 }

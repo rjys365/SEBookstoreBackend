@@ -20,6 +20,9 @@ public class User {
     @Column(name = "signature")
     private String signature;
 
+    @Column(name = "email")
+    private String email;
+
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserAuth userAuth;
 

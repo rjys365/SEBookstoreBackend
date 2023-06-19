@@ -14,4 +14,6 @@ public interface UserDAO {
     public User saveUser(User user);
 
     Iterable<User> findAll();
+
+    Optional<User> addUser(User user);
 }

@@ -1,3 +1,5 @@
+// User digest for management purposes
+
 package cn.rjys365.sebookstorebackend.dto;
 
 import cn.rjys365.sebookstorebackend.entities.User;

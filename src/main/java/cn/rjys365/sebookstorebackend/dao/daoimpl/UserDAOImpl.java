@@ -34,4 +34,16 @@ public class UserDAOImpl implements UserDAO {
     public Iterable<User> findAll() {
         return this.userRepository.findAll();
     }
+
+    @Override
+    public Optional<User> addUser(User user) {
+        if (user.getId() != null) return Optional.empty();
+        if (user.getUserAuth() == null || user.getUserAuth().getPassword() == null) return Optional.empty();
+        user.getUserAuth().setRole(1);
+        String name = user.getName();
+        if (name == null || name.equals("") || findUserByName(name).isPresent()) return Optional.empty();
+        String email = user.getEmail();
+        if (email == null || email.equals("")) return Optional.empty();
+        return Optional.of(this.userRepository.save(user));
+    }
 }
