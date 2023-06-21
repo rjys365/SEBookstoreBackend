@@ -1,15 +1,17 @@
 package cn.rjys365.sebookstorebackend.controller;
 
-import cn.rjys365.sebookstorebackend.dto.UserDigest;
-import cn.rjys365.sebookstorebackend.dto.UserLoginResponse;
-import cn.rjys365.sebookstorebackend.dto.UserRegisterRequest;
+import cn.rjys365.sebookstorebackend.dto.*;
+import cn.rjys365.sebookstorebackend.entities.Book;
+import cn.rjys365.sebookstorebackend.entities.CartItem;
 import cn.rjys365.sebookstorebackend.entities.User;
+import cn.rjys365.sebookstorebackend.service.BookService;
 import cn.rjys365.sebookstorebackend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -19,7 +21,7 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, BookService bookService) {
         this.userService = userService;
     }
     @PostMapping("/login")

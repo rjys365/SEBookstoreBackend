@@ -1,8 +1,10 @@
 package cn.rjys365.sebookstorebackend.entities;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 
 @Entity
+@EqualsAndHashCode
 @Table(name="books")
 public class Book {
     @Id

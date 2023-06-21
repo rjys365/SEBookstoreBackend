@@ -10,39 +10,50 @@ public class OrderDigest {
     private Integer itemCount;
     private Double totalPrice;
     private String firstItemTitle;
-    public Integer getId(){
+    private Integer userId;
+
+    public Integer getId() {
         return this.id;
     }
-    public Integer getItemCount(){
+
+    public Integer getUserId() {
+        return this.userId;
+    }
+
+    public Integer getItemCount() {
         return this.itemCount;
     }
-    public Double getTotalPrice(){
+
+    public Double getTotalPrice() {
         return this.totalPrice;
     }
-    public String getFirstItemTitle(){
+
+    public String getFirstItemTitle() {
         return this.firstItemTitle;
     }
-//    public OrderDigest(Integer id,Integer itemCount,Double totalPrice,String firstItemTitle){
+
+    //    public OrderDigest(Integer id,Integer itemCount,Double totalPrice,String firstItemTitle){
 //        this.id = id;
 //        this.itemCount = itemCount;
 //        this.totalPrice = totalPrice;
 //        this.firstItemTitle = firstItemTitle;
 //    }
-    public OrderDigest(Order order){
+    public OrderDigest(Order order) {
         this.id = order.getId();
+        this.userId = order.getUserId();
         Set<OrderItem> items = order.getItems();
         Integer itemCount = 0;
         Double totalPrice = 0.0;
         String firstItemTitle = "";
-        for (OrderItem item : items){
+        for (OrderItem item : items) {
             itemCount += item.getCount();
-            totalPrice += item.getPrice()*item.getCount();
-            if (firstItemTitle.equals("")){
+            totalPrice += item.getPrice() * item.getCount();
+            if (firstItemTitle.equals("")) {
                 firstItemTitle = item.getTitle();
             }
         }
-        this.itemCount=itemCount;
-        this.totalPrice=totalPrice;
-        this.firstItemTitle=firstItemTitle;
+        this.itemCount = itemCount;
+        this.totalPrice = totalPrice;
+        this.firstItemTitle = firstItemTitle;
     }
 }

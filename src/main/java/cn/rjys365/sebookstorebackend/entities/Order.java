@@ -10,7 +10,7 @@ import java.util.Set;
 @Table(name="orders")
 public class Order {
 
-    @OneToMany(cascade = CascadeType.PERSIST,orphanRemoval = true,mappedBy = "order")
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true,mappedBy = "order")
     @JsonManagedReference
     private Set<OrderItem> items;
 
@@ -36,9 +36,15 @@ public class Order {
     public void setId(Integer id){
         this.id = id;
     }
+
+    public void setUserId(Integer userId){
+        this.userId=userId;
+    }
+
     public Integer getUserId(){
         return this.userId;
     }
+
 //    public OrderDigest getDigest(){
 //        Integer itemCount = 0;
 //        Double totalPrice = 0.0;
@@ -57,10 +63,10 @@ public class Order {
 //        this.items = items;
 //    }
     public String toString(){
-        String result = "Order "+this.id+":\n";
+        StringBuilder result = new StringBuilder("Order " + this.id + ":\n");
         for (OrderItem item : items){
-            result += item.toString()+"\n";
+            result.append(item.toString()).append("\n");
         }
-        return result;
+        return result.toString();
     }
 }
