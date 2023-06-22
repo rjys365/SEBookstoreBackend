@@ -26,7 +26,7 @@ public class BookController {
     }
 
 
-    @GetMapping("/allBooks")
+    @GetMapping("/")
     public Iterable<Book> getAllBooks(){
         return this.bookService.getAllBooks();
     }
