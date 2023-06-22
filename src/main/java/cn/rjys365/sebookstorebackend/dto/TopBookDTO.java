@@ -8,11 +8,11 @@ import lombok.Setter;
 public class TopBookDTO {
     private int bookId;
     private String title;
-    private long totalQuantity;
+    private long totalCount;
 
-    public TopBookDTO(int bookId, String title, long totalQuantity) {
+    public TopBookDTO(int bookId, String title, long totalCount) {
         this.bookId = bookId;
         this.title = title;
-        this.totalQuantity = totalQuantity;
+        this.totalCount = totalCount;
     }
 }

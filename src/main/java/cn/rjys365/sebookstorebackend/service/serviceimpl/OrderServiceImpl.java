@@ -65,6 +65,7 @@ public class OrderServiceImpl implements OrderService {
                 if(bookOptional.isEmpty())throw new InvalidDataAccessApiUsageException("Non-existent order item");
                 Book book = bookOptional.get();
                 book.setStock(book.getStock()-item.getCount());
+                bookDAO.saveBook(book);
             });
             return ret;
         } catch (DataAccessException e) {

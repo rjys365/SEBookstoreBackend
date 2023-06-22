@@ -2,6 +2,7 @@ package cn.rjys365.sebookstorebackend.dao.daoimpl;
 
 import cn.rjys365.sebookstorebackend.dao.OrderItemDAO;
 import cn.rjys365.sebookstorebackend.dto.TopBookDTO;
+import cn.rjys365.sebookstorebackend.dto.UserBookStatsDTO;
 import cn.rjys365.sebookstorebackend.repositories.OrderItemRepository;
 import org.springframework.stereotype.Repository;
 
@@ -24,5 +25,15 @@ public class OrderItemDAOImpl implements OrderItemDAO {
     @Override
     public List<TopBookDTO> findTopBooksByUserIdAndTotalCountBetweenDates(LocalDateTime startDate, LocalDateTime endDate, Integer userId) {
         return this.orderItemRepository.findTopBooksByTotalCountAndUserId(startDate, endDate,userId);
+    }
+
+    @Override
+    public List<UserBookStatsDTO> findAllUsersBookStatsByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
+        return this.orderItemRepository.findAllUsersBookStatsByDateRange(startDate, endDate);
+    }
+
+    @Override
+    public UserBookStatsDTO findUserBookStatsByUserIdAndDateRange(LocalDateTime startDate, LocalDateTime endDate, Integer userId) {
+        return this.orderItemRepository.findUserBookStatsByUserIdAndDateRange(startDate,endDate,userId);
     }
 }
