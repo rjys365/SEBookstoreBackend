@@ -10,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -55,9 +56,18 @@ public class OrderServiceImpl implements OrderService {
                 if(bookOptional.isEmpty())throw new InvalidDataAccessApiUsageException("Non-existent order item");
                 //TODO:STOCK CHECK
                 Book book = bookOptional.get();
+                if(book.getStock()<item.getCount())throw new OrderServiceException("Out of stock");
                 item.setBookIdPriceTitle(book);
             });
-            return this.orderDAO.saveOrder(order);
+            order.setCreatedTime(LocalDateTime.now());
+            Order ret = this.orderDAO.saveOrder(order);
+            order.getItems().forEach(item->{
+                Optional<Book> bookOptional = this.bookDAO.getBookById(item.getBookId());
+                if(bookOptional.isEmpty())throw new InvalidDataAccessApiUsageException("Non-existent order item");
+                Book book = bookOptional.get();
+                book.setStock(book.getStock()-item.getCount());
+            });
+            return ret;
         } catch (DataAccessException e) {
             throw new OrderServiceException(e.getMessage());
         }

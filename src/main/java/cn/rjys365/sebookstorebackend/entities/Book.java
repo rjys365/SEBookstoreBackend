@@ -2,8 +2,13 @@ package cn.rjys365.sebookstorebackend.entities;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Setter
 @EqualsAndHashCode
 @Table(name="books")
 public class Book {
@@ -29,8 +34,12 @@ public class Book {
 
     @Column(name="introduction")
     private String introduction;
+
     @Column(name="image_url")//TODO:implement image upload
     private String image;
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CartItem> cartItems = new ArrayList<>();
     public Integer getId(){
         return this.id;
     }

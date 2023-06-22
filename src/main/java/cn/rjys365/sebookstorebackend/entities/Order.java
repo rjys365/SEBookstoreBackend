@@ -3,10 +3,15 @@ package cn.rjys365.sebookstorebackend.entities;
 import cn.rjys365.sebookstorebackend.dto.OrderDigest;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
+@Setter
+@Getter
 @Table(name="orders")
 public class Order {
 
@@ -21,6 +26,10 @@ public class Order {
 
     @Column(name="user_id")
     private Integer userId;
+
+    @Column(name="created_time")
+    private LocalDateTime createdTime;
+
     public Set<OrderItem> getItems(){
         return this.items;
     }

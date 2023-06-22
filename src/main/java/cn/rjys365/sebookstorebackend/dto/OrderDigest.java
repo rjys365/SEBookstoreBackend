@@ -2,15 +2,19 @@ package cn.rjys365.sebookstorebackend.dto;
 
 import cn.rjys365.sebookstorebackend.entities.Order;
 import cn.rjys365.sebookstorebackend.entities.OrderItem;
+import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
+@Getter
 public class OrderDigest {
     private Integer id;
     private Integer itemCount;
     private Double totalPrice;
     private String firstItemTitle;
     private Integer userId;
+    private LocalDateTime createdTime;
 
     public Integer getId() {
         return this.id;
@@ -55,5 +59,6 @@ public class OrderDigest {
         this.itemCount = itemCount;
         this.totalPrice = totalPrice;
         this.firstItemTitle = firstItemTitle;
+        this.createdTime = order.getCreatedTime();
     }
 }

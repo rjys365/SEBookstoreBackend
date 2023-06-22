@@ -19,12 +19,12 @@ public class OrderDAOImpl implements OrderDAO {
 
     @Override
     public List<Order> getAllOrdersByUserId(Integer userId) {
-        return orderRepository.findAllByUserId(userId);
+        return orderRepository.findAllByUserIdOrderByCreatedTimeDesc(userId);
     }
 
     @Override
     public List<Order> getAllOrders() {
-        return this.orderRepository.findAll();
+        return this.orderRepository.findAllByOrderByCreatedTimeDesc();
     }
 
     @Override
