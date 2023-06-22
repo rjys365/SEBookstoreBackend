@@ -54,7 +54,6 @@ public class OrderServiceImpl implements OrderService {
                 item.setOrder(order);
                 Optional<Book> bookOptional = this.bookDAO.getBookById(item.getBookId());
                 if(bookOptional.isEmpty())throw new InvalidDataAccessApiUsageException("Non-existent order item");
-                //TODO:STOCK CHECK
                 Book book = bookOptional.get();
                 if(book.getStock()<item.getCount())throw new OrderServiceException("Out of stock");
                 item.setBookIdPriceTitle(book);

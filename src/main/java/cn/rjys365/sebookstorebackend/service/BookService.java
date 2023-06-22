@@ -8,4 +8,8 @@ public interface BookService {
     public Iterable<Book> getAllBooks();
 
     public Optional<Book> getBookById(Integer id);
+
+    public Optional<Book> saveBook(Book book);
+
+    public Boolean deleteBookById(Integer bookId);
 }

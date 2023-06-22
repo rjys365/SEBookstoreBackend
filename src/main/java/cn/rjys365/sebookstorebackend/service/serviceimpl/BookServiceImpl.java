@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService {
-    private BookDAO bookDAO;
+    private final BookDAO bookDAO;
 
     public BookServiceImpl(BookDAO bookDAO) {
         this.bookDAO = bookDAO;
@@ -21,5 +21,17 @@ public class BookServiceImpl implements BookService {
 
     public Optional<Book> getBookById(Integer id){
         return this.bookDAO.getBookById(id);
+    }
+
+    @Override
+    public Optional<Book> saveBook(Book book) {
+        return bookDAO.saveBook(book);
+    }
+
+    @Override
+    public Boolean deleteBookById(Integer bookId) {
+        Optional<Book> bookOptional=bookDAO.getBookById(bookId);
+        if(bookOptional.isEmpty())return false;
+        return bookDAO.deleteBook(bookOptional.get());
     }
 }

@@ -1,13 +1,11 @@
 package cn.rjys365.sebookstorebackend.controller;
 
-import cn.rjys365.sebookstorebackend.dao.BookDAO;
-import cn.rjys365.sebookstorebackend.dao.daoimpl.BookDAOImpl;
 import cn.rjys365.sebookstorebackend.entities.Book;
 //import cn.rjys365.sebookstorebackend.util.BookConst;
 
-import cn.rjys365.sebookstorebackend.repositories.BookRepository;
 import cn.rjys365.sebookstorebackend.service.BookService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -45,6 +43,29 @@ public class BookController {
             return bookOptional.get();
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Book Not Found");
+    }
+
+    @PatchMapping("/")
+    public Book saveBook(@RequestBody Book book){
+        if(book.getId()==null||bookService.getBookById(book.getId()).isEmpty())throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Invalid Patch Book");
+        Optional<Book> bookOptional=bookService.saveBook(book);
+        if(bookOptional.isEmpty())throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Invalid Patch Book");
+        return bookOptional.get();
+    }
+
+    @PostMapping("/")
+    public Book createBook(@RequestBody Book book){
+        if(book.getId()!=null)throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Invalid Patch Book");
+        Optional<Book> bookOptional=bookService.saveBook(book);
+        if(bookOptional.isEmpty())throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Invalid Patch Book");
+        return bookOptional.get();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteBook(@PathVariable Integer id){
+        Boolean success = bookService.deleteBookById(id);
+        if(success)return ResponseEntity.ok(true);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
     }
 
     @GetMapping("/helloworld")
