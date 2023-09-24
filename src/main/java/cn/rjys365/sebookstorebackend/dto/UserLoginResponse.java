@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class UserLoginResponse {
-    private Integer userId;
-    private Integer token;//TODO: real login
+    private Long userId;
+    private Long token;//TODO: real login
     private Integer role;
-    public UserLoginResponse(Integer userId, Integer token, Integer role){
+    public UserLoginResponse(Long userId, Long token, Integer role){
         this.userId = userId;
         this.token = token;
         this.role = role;

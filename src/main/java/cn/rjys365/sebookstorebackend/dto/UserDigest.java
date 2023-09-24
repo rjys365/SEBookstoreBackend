@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class UserDigest {
-    private Integer id;
+    private Long id;
     private String name;
     private Integer role;
 
