@@ -6,6 +6,7 @@ import cn.rjys365.sebookstorebackend.dao.UserDAO;
 import cn.rjys365.sebookstorebackend.entities.*;
 import cn.rjys365.sebookstorebackend.exception.OrderServiceException;
 import cn.rjys365.sebookstorebackend.service.OrderService;
+import jakarta.transaction.Transactional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public Optional<Order> createOrderFromUserCartItems(Integer userId) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         if(userOptional.isEmpty())return Optional.empty();

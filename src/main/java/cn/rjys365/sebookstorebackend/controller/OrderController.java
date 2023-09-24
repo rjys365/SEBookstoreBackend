@@ -2,11 +2,13 @@ package cn.rjys365.sebookstorebackend.controller;
 
 import cn.rjys365.sebookstorebackend.dto.CartItemRequest;
 import cn.rjys365.sebookstorebackend.dto.OrderDetailsDTO;
+import cn.rjys365.sebookstorebackend.dto.OrderRequest;
 import cn.rjys365.sebookstorebackend.entities.Order;
 import cn.rjys365.sebookstorebackend.dto.OrderDigest;
 import cn.rjys365.sebookstorebackend.service.OrderService;
 import cn.rjys365.sebookstorebackend.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,9 +24,12 @@ public class OrderController {
 
     private final UserService userService;
 
-    public OrderController(OrderService orderService, UserService userService) {
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+
+    public OrderController(OrderService orderService, UserService userService, KafkaTemplate<String, Object> kafkaTemplate) {
         this.orderService = orderService;
         this.userService = userService;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @GetMapping("/")
@@ -53,7 +58,7 @@ public class OrderController {
             orderOptional = this.orderService.createOrderFromUserCartItems(userId);
             if (orderOptional.isEmpty())
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal order creation");
-            this.userService.setUserCartItems(userId,new ArrayList<>());
+            this.userService.setUserCartItems(userId, new ArrayList<>());
             return new OrderDetailsDTO(orderOptional.get());
         } else if (from.equals("item")) {
             if (item == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal order creation");
@@ -62,5 +67,21 @@ public class OrderController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal order creation");
             return new OrderDetailsDTO(orderOptional.get());
         } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal order creation");
+    }
+
+    @PostMapping("/async/")
+    public Boolean asyncNewOrder(@RequestParam Integer userId, @RequestParam String from,
+                                 @RequestBody(required = false) CartItemRequest item) {
+        System.out.println("收到订单，向Kafka发送中");
+        if (from.equals("cart")) {
+            OrderRequest orderRequest = new OrderRequest(Long.valueOf(userId), null);
+            kafkaTemplate.send("order_request", orderRequest);
+            return true;
+        } else if (from.equals("item")) {
+            if (item == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal order creation");
+            OrderRequest orderRequest = new OrderRequest(Long.valueOf(userId), item.getId());
+            kafkaTemplate.send("order_request", orderRequest);
+            return true;
+        } else return false;
     }
 }
