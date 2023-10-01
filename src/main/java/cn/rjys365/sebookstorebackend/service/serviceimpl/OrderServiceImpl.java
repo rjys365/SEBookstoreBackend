@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -51,16 +52,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Optional<Order> getOrderByUuid(UUID uuid) {
+        return orderDAO.getOrderByUuid(uuid);
+    }
+
+    @Override
     @Transactional(value = Transactional.TxType.REQUIRED)
     public Order saveOrder(Order order) {
         try {
             validateOrder(order);
-            orderDAO.saveOrder(order);
             order.setCreatedTime(LocalDateTime.now());
-            Order ret = this.orderDAO.saveOrder(order);
+            this.orderDAO.saveOrder(order);
             saveOrderItems(order);
             updateStock(order);
-            return ret;
+            return order;
         } catch (DataAccessException e) {
             throw new OrderServiceException(e.getMessage());
         }
@@ -97,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public Optional<Order> createOrderFromUserCartItems(Integer userId) {
+    public Optional<Order> createOrderFromUserCartItems(Integer userId, UUID uuid) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         if(userOptional.isEmpty())return Optional.empty();
         User user=userOptional.get();
@@ -118,6 +123,7 @@ public class OrderServiceImpl implements OrderService {
             orderItems.add(orderItem);
         }
         order.setItems(orderItems);
+        order.setUuid(uuid);
         try {
             return Optional.of(this.saveOrder(order));
         }
@@ -128,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public Optional<Order> createOrderFromItem(Integer userId, Integer bookId, Integer quantity) {
+    public Optional<Order> createOrderFromItem(Integer userId, Integer bookId, Integer quantity, UUID uuid) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         if(userOptional.isEmpty())return Optional.empty();
         User user=userOptional.get();
@@ -146,6 +152,7 @@ public class OrderServiceImpl implements OrderService {
         orderItem.setCount(quantity);
         orderItems.add(orderItem);
         order.setItems(orderItems);
+        order.setUuid(uuid);
         try {
             return Optional.of(this.saveOrder(order));
         }

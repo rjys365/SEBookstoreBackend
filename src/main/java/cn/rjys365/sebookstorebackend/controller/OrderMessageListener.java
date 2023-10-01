@@ -5,7 +5,6 @@ import cn.rjys365.sebookstorebackend.dto.OrderRequest;
 import cn.rjys365.sebookstorebackend.service.OrderService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,14 +22,14 @@ public class OrderMessageListener {
     public void listenOrder(OrderRequest orderRequest) {
         if (orderRequest.getUserId() == null) return;
         if (orderRequest.getBookId() == null) {
-            var orderOptional= this.orderService.createOrderFromUserCartItems(orderRequest.getUserId().intValue());
+            var orderOptional= this.orderService.createOrderFromUserCartItems(orderRequest.getUserId().intValue(), orderRequest.getUuid());
             if(orderOptional.isPresent()){
                 System.out.println("Order created from cart by user"+orderRequest.getUserId());
                 kafkaTemplate.send("order_response",new OrderDetailsDTO(orderOptional.get()));
             }
         }
         else {
-            var orderOptional=this.orderService.createOrderFromItem(orderRequest.getUserId().intValue(), orderRequest.getBookId().intValue(), 1);
+            var orderOptional=this.orderService.createOrderFromItem(orderRequest.getUserId().intValue(), orderRequest.getBookId().intValue(), 1, orderRequest.getUuid());
             if(orderOptional.isPresent()){
                 System.out.println("Order created from item by user"+orderRequest.getUserId());
                 kafkaTemplate.send("order_response",new OrderDetailsDTO(orderOptional.get()));

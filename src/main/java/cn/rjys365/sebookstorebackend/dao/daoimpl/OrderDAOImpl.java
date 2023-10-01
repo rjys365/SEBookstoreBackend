@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class OrderDAOImpl implements OrderDAO {
@@ -39,5 +40,10 @@ public class OrderDAOImpl implements OrderDAO {
         //System.out.println(order);
         this.orderRepository.save(order);
         return order;
+    }
+
+    @Override
+    public Optional<Order> getOrderByUuid(UUID uuid) {
+        return orderRepository.getOrderByUuid(uuid);
     }
 }

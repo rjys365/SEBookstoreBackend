@@ -1,10 +1,7 @@
 package cn.rjys365.sebookstorebackend.controller;
 
-import cn.rjys365.sebookstorebackend.dto.CartItemRequest;
-import cn.rjys365.sebookstorebackend.dto.OrderDetailsDTO;
-import cn.rjys365.sebookstorebackend.dto.OrderRequest;
+import cn.rjys365.sebookstorebackend.dto.*;
 import cn.rjys365.sebookstorebackend.entities.Order;
-import cn.rjys365.sebookstorebackend.dto.OrderDigest;
 import cn.rjys365.sebookstorebackend.service.OrderService;
 import cn.rjys365.sebookstorebackend.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -55,14 +52,14 @@ public class OrderController {
     public OrderDetailsDTO newOrder(@RequestParam Integer userId, @RequestParam String from, @RequestBody(required = false) CartItemRequest item) {
         Optional<Order> orderOptional;
         if (from.equals("cart")) {
-            orderOptional = this.orderService.createOrderFromUserCartItems(userId);
+            orderOptional = this.orderService.createOrderFromUserCartItems(userId, null);
             if (orderOptional.isEmpty())
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal order creation");
             this.userService.setUserCartItems(userId, new ArrayList<>());
             return new OrderDetailsDTO(orderOptional.get());
         } else if (from.equals("item")) {
             if (item == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal order creation");
-            orderOptional = this.orderService.createOrderFromItem(userId, item.getId(), item.getQuantity());
+            orderOptional = this.orderService.createOrderFromItem(userId, item.getId(), item.getQuantity(), null);
             if (orderOptional.isEmpty())
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal order creation");
             return new OrderDetailsDTO(orderOptional.get());
@@ -70,18 +67,18 @@ public class OrderController {
     }
 
     @PostMapping("/async/")
-    public Boolean asyncNewOrder(@RequestParam Integer userId, @RequestParam String from,
-                                 @RequestBody(required = false) CartItemRequest item) {
+    public AsyncOrderResponse asyncNewOrder(@RequestParam Integer userId, @RequestParam String from,
+                                            @RequestBody(required = false) CartItemRequest item) {
         System.out.println("收到订单，向Kafka发送中");
         if (from.equals("cart")) {
             OrderRequest orderRequest = new OrderRequest(Long.valueOf(userId), null);
             kafkaTemplate.send("order_request", orderRequest);
-            return true;
+            return new AsyncOrderResponse(orderRequest.getUuid());
         } else if (from.equals("item")) {
             if (item == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal order creation");
             OrderRequest orderRequest = new OrderRequest(Long.valueOf(userId), item.getId());
             kafkaTemplate.send("order_request", orderRequest);
-            return true;
-        } else return false;
+            return new AsyncOrderResponse(orderRequest.getUuid());
+        } else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal order creation");
     }
 }

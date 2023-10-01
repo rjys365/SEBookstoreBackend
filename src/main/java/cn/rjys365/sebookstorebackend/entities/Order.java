@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Setter
@@ -32,6 +33,9 @@ public class Order {
 
     @Column(name="created_time")
     private LocalDateTime createdTime;
+
+    @Column(name="uuid")
+    private UUID uuid;
 
     public void setItems(Set<OrderItem> items){
         this.items = items;
