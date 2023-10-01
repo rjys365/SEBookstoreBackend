@@ -2,6 +2,7 @@ package cn.rjys365.sebookstorebackend.service.serviceimpl;
 
 import cn.rjys365.sebookstorebackend.dao.BookDAO;
 import cn.rjys365.sebookstorebackend.dao.OrderDAO;
+import cn.rjys365.sebookstorebackend.dao.OrderItemDAO;
 import cn.rjys365.sebookstorebackend.dao.UserDAO;
 import cn.rjys365.sebookstorebackend.entities.*;
 import cn.rjys365.sebookstorebackend.exception.OrderServiceException;
@@ -25,10 +26,13 @@ public class OrderServiceImpl implements OrderService {
 
     private final BookDAO bookDAO;
 
-    public OrderServiceImpl(OrderDAO orderDAO, UserDAO userDAO, BookDAO bookDAO) {
+    private final OrderItemDAO orderItemDAO;
+
+    public OrderServiceImpl(OrderDAO orderDAO, UserDAO userDAO, BookDAO bookDAO, OrderItemDAO orderItemDAO) {
         this.orderDAO = orderDAO;
         this.userDAO = userDAO;
         this.bookDAO = bookDAO;
+        this.orderItemDAO = orderItemDAO;
     }
 
     @Override
@@ -47,35 +51,52 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(value = Transactional.TxType.REQUIRED)
     public Order saveOrder(Order order) {
         try {
-            if(order.getItems()==null||order.getItems().isEmpty())throw new InvalidDataAccessApiUsageException("Empty Order");
-            order.getItems().forEach(item->{
-                if(item.getCount()==null||item.getCount()<=0)throw new InvalidDataAccessApiUsageException("Invalid order item count");
-                item.setOrder(order);
-                Optional<Book> bookOptional = this.bookDAO.getBookById(item.getBookId());
-                if(bookOptional.isEmpty())throw new InvalidDataAccessApiUsageException("Non-existent order item");
-                Book book = bookOptional.get();
-                if(book.getStock()<item.getCount())throw new OrderServiceException("Out of stock");
-                item.setBookIdPriceTitle(book);
-            });
+            validateOrder(order);
+            orderDAO.saveOrder(order);
             order.setCreatedTime(LocalDateTime.now());
             Order ret = this.orderDAO.saveOrder(order);
-            order.getItems().forEach(item->{
-                Optional<Book> bookOptional = this.bookDAO.getBookById(item.getBookId());
-                if(bookOptional.isEmpty())throw new InvalidDataAccessApiUsageException("Non-existent order item");
-                Book book = bookOptional.get();
-                book.setStock(book.getStock()-item.getCount());
-                bookDAO.saveBook(book);
-            });
+            saveOrderItems(order);
+            updateStock(order);
             return ret;
         } catch (DataAccessException e) {
             throw new OrderServiceException(e.getMessage());
         }
     }
 
+    @Transactional(value = Transactional.TxType.REQUIRED)
+    public void saveOrderItems(Order order){
+        order.getItems().forEach(orderItemDAO::saveOrderItem);
+    }
+    @Transactional(value = Transactional.TxType.SUPPORTS)
+    public void updateStock(Order order) {
+        order.getItems().forEach(item->{
+            Optional<Book> bookOptional = this.bookDAO.getBookById(item.getBookId());
+            if(bookOptional.isEmpty())throw new InvalidDataAccessApiUsageException("Non-existent order item");
+            Book book = bookOptional.get();
+            book.setStock(book.getStock()-item.getCount());
+            bookDAO.saveBook(book);
+        });
+    }
+
+    @Transactional(value = Transactional.TxType.SUPPORTS)
+    public void validateOrder(Order order) {
+        if(order.getItems()==null|| order.getItems().isEmpty())throw new InvalidDataAccessApiUsageException("Empty Order");
+        order.getItems().forEach(item->{
+            if(item.getCount()==null||item.getCount()<=0)throw new InvalidDataAccessApiUsageException("Invalid order item count");
+            item.setOrder(order);
+            Optional<Book> bookOptional = this.bookDAO.getBookById(item.getBookId());
+            if(bookOptional.isEmpty())throw new InvalidDataAccessApiUsageException("Non-existent order item");
+            Book book = bookOptional.get();
+            if(book.getStock()<item.getCount())throw new OrderServiceException("Out of stock");
+            item.setBookIdPriceTitle(book);
+        });
+    }
+
     @Override
-    @Transactional
+    @Transactional(value = Transactional.TxType.REQUIRED)
     public Optional<Order> createOrderFromUserCartItems(Integer userId) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         if(userOptional.isEmpty())return Optional.empty();
@@ -106,6 +127,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(value = Transactional.TxType.REQUIRED)
     public Optional<Order> createOrderFromItem(Integer userId, Integer bookId, Integer quantity) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         if(userOptional.isEmpty())return Optional.empty();

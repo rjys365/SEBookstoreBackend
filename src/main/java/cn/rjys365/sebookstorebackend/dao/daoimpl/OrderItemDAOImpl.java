@@ -3,7 +3,9 @@ package cn.rjys365.sebookstorebackend.dao.daoimpl;
 import cn.rjys365.sebookstorebackend.dao.OrderItemDAO;
 import cn.rjys365.sebookstorebackend.dto.TopBookDTO;
 import cn.rjys365.sebookstorebackend.dto.UserBookStatsDTO;
+import cn.rjys365.sebookstorebackend.entities.OrderItem;
 import cn.rjys365.sebookstorebackend.repositories.OrderItemRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -35,5 +37,11 @@ public class OrderItemDAOImpl implements OrderItemDAO {
     @Override
     public UserBookStatsDTO findUserBookStatsByUserIdAndDateRange(LocalDateTime startDate, LocalDateTime endDate, Integer userId) {
         return this.orderItemRepository.findUserBookStatsByUserIdAndDateRange(startDate,endDate,userId);
+    }
+
+    @Override
+    @Transactional(value = Transactional.TxType.SUPPORTS)
+    public OrderItem saveOrderItem(OrderItem orderItem) {
+        return this.orderItemRepository.save(orderItem);
     }
 }

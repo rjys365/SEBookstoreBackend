@@ -15,31 +15,26 @@ import java.util.Set;
 @Table(name="orders")
 public class Order {
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true,mappedBy = "order")
+    @Getter
+    @OneToMany(mappedBy = "order")
     @JsonManagedReference
     private Set<OrderItem> items;
 
+    @Getter
     @Id
     @GeneratedValue
     @Column(name="id")
     private Integer id;
 
+    @Getter
     @Column(name="user_id")
     private Integer userId;
 
     @Column(name="created_time")
     private LocalDateTime createdTime;
 
-    public Set<OrderItem> getItems(){
-        return this.items;
-    }
-
     public void setItems(Set<OrderItem> items){
         this.items = items;
-    }
-
-    public Integer getId(){
-        return this.id;
     }
 
     public void setId(Integer id){
@@ -50,11 +45,7 @@ public class Order {
         this.userId=userId;
     }
 
-    public Integer getUserId(){
-        return this.userId;
-    }
-
-//    public OrderDigest getDigest(){
+    //    public OrderDigest getDigest(){
 //        Integer itemCount = 0;
 //        Double totalPrice = 0.0;
 //        String firstItemTitle = "";

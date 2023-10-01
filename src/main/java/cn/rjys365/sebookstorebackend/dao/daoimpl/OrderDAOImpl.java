@@ -3,6 +3,7 @@ package cn.rjys365.sebookstorebackend.dao.daoimpl;
 import cn.rjys365.sebookstorebackend.dao.OrderDAO;
 import cn.rjys365.sebookstorebackend.entities.Order;
 import cn.rjys365.sebookstorebackend.repositories.OrderRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
+    @Transactional(value = Transactional.TxType.SUPPORTS)
     public Order saveOrder(Order order) {
         //System.out.println(order);
         this.orderRepository.save(order);
