@@ -34,7 +34,7 @@ public class CartController {
     }
 
     @GetMapping("/{id}")
-    public List<CartItemResponse> getCartItems(@PathVariable Integer id) {
+    public List<CartItemResponse> getCartItems(@PathVariable Long id) {
         Optional<List<CartItem>> cartItemsOptional = userService.getUserCartItems(id);
         if (cartItemsOptional.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Illegal get cart operation");
@@ -42,7 +42,7 @@ public class CartController {
     }
 
     @PutMapping("/{id}")
-    public List<CartItemResponse> setCartItems(@PathVariable Integer id, @RequestBody List<CartItemRequest> cartItemsDTO) {
+    public List<CartItemResponse> setCartItems(@PathVariable Long id, @RequestBody List<CartItemRequest> cartItemsDTO) {
         List<CartItem> cartItems = new ArrayList<>();
         for (CartItemRequest itemRequest : cartItemsDTO) {
             Optional<Book> bookOptional = bookService.getBookById(itemRequest.getId());
@@ -63,7 +63,7 @@ public class CartController {
     }
 
     @PatchMapping("/{id}")
-    public List<CartItemResponse> updateCartItem(@PathVariable Integer id, @RequestBody CartItemRequest cartItemRequest,
+    public List<CartItemResponse> updateCartItem(@PathVariable Long id, @RequestBody CartItemRequest cartItemRequest,
                                                  @RequestParam(required = false) String operation) {
         Optional<List<CartItem>> cartItemsOptional;
         if (operation != null && operation.equals("add"))

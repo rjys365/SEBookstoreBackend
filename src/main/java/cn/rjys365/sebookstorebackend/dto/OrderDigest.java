@@ -13,14 +13,14 @@ public class OrderDigest {
     private Integer itemCount;
     private Double totalPrice;
     private String firstItemTitle;
-    private Integer userId;
+    private Long userId;
     private LocalDateTime createdTime;
 
     public Integer getId() {
         return this.id;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return this.userId;
     }
 
@@ -42,6 +42,8 @@ public class OrderDigest {
 //        this.totalPrice = totalPrice;
 //        this.firstItemTitle = firstItemTitle;
 //    }
+
+    public OrderDigest(){}
     public OrderDigest(Order order) {
         this.id = order.getId();
         this.userId = order.getUserId();

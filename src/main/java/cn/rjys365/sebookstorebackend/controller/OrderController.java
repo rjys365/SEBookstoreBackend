@@ -49,7 +49,7 @@ public class OrderController {
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDetailsDTO newOrder(@RequestParam Integer userId, @RequestParam String from, @RequestBody(required = false) CartItemRequest item) {
+    public OrderDetailsDTO newOrder(@RequestParam Long userId, @RequestParam String from, @RequestBody(required = false) CartItemRequest item) {
         Optional<Order> orderOptional;
         if (from.equals("cart")) {
             orderOptional = this.orderService.createOrderFromUserCartItems(userId, null);

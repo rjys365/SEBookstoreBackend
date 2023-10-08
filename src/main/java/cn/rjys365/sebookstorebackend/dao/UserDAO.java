@@ -7,7 +7,7 @@ import java.util.Optional;
 
 
 public interface UserDAO {
-    public Optional<User> findUserById(Integer id);
+    public Optional<User> findUserById(Long id);
 
     public Optional<User> findUserByName(String username);
 

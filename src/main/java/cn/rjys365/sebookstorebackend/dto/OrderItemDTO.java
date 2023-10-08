@@ -16,6 +16,8 @@ public class OrderItemDTO {
 
     private Double subTotal;
 
+    public OrderItemDTO(){}
+
     public OrderItemDTO(OrderItem orderItem){
         this.id = orderItem.getBookId();
         this.count = orderItem.getCount();

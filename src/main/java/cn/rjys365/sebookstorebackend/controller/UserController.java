@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/block")
-    public UserDigest blockUser(@PathVariable Integer id,@RequestParam Integer blockerId){
+    public UserDigest blockUser(@PathVariable Long id,@RequestParam Long blockerId){
         User user = userService.blockUser(id,blockerId);
         if(user!=null){
             return new UserDigest(user);
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/unblock")
-    public UserDigest unBlockUser(@PathVariable Integer id,@RequestParam Integer unBlockerId){
+    public UserDigest unBlockUser(@PathVariable Long id,@RequestParam Long unBlockerId){
         User user = userService.unBlockUser(id,unBlockerId);
         if(user!=null){
             return new UserDigest(user);
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @GetMapping("/allUsers")
-    public ArrayList<UserDigest> getAllUsersDigest(@RequestParam Integer getterId){
+    public ArrayList<UserDigest> getAllUsersDigest(@RequestParam Long getterId){
         Iterable<User> users=this.userService.getAllUsers(getterId);
         if(users==null)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Illegal all user operation");
         ArrayList<UserDigest> digests=new ArrayList<>();

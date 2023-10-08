@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User blockUser(Integer id, Integer blockerId) {
+    public User blockUser(Long id, Long blockerId) {
         Optional<User> userOptional = userDAO.findUserById(id);
         Optional<User> blockerOptional = userDAO.findUserById(blockerId);
         if (blockerOptional.isEmpty()) return null;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User unBlockUser(Integer id, Integer unBlockerId) {
+    public User unBlockUser(Long id, Long unBlockerId) {
         Optional<User> userOptional = userDAO.findUserById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Iterable<User> getAllUsers(Integer getterId) {
+    public Iterable<User> getAllUsers(Long getterId) {
         Optional<User> userOptional = userDAO.findUserById(getterId);
         if (userOptional.isEmpty()) return null;
         if (userOptional.get().getUserAuth().getRole() != 2) return null;
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<CartItem>> getUserCartItems(Integer userId) {
+    public Optional<List<CartItem>> getUserCartItems(Long userId) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         if (userOptional.isEmpty()) return Optional.empty();
         User user = userOptional.get();
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<CartItem>> setUserCartItems(Integer userId, List<CartItem> cart) {
+    public Optional<List<CartItem>> setUserCartItems(Long userId, List<CartItem> cart) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         if (userOptional.isEmpty()) return Optional.empty();
         User user = userOptional.get();
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<CartItem>> addUserCartItem(Integer userId, Integer bookId, Integer count) {
+    public Optional<List<CartItem>> addUserCartItem(Long userId, Integer bookId, Integer count) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         Optional<Book> bookOptional = bookDAO.getBookById(bookId);
         if (userOptional.isEmpty() || bookOptional.isEmpty()) return Optional.empty();
@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<List<CartItem>> setUserCartItem(Integer userId, Integer bookId, Integer count) {
+    public Optional<List<CartItem>> setUserCartItem(Long userId, Integer bookId, Integer count) {
         if (count < 0) return Optional.empty();
         Optional<User> userOptional = userDAO.findUserById(userId);
         Optional<Book> bookOptional = bookDAO.getBookById(bookId);

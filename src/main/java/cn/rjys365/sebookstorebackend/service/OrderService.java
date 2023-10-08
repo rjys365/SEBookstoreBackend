@@ -17,8 +17,8 @@ public interface OrderService {
 
     public Order saveOrder(Order order);
 
-    public Optional<Order> createOrderFromUserCartItems(Integer userId, UUID uuid);
+    public Optional<Order> createOrderFromUserCartItems(Long userId, UUID uuid);
 
-    public Optional<Order> createOrderFromItem(Integer userId, Integer bookId, Integer quantity, UUID uuid);
+    public Optional<Order> createOrderFromItem(Long userId, Integer bookId, Integer quantity, UUID uuid);
 
 }

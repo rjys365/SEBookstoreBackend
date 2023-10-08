@@ -16,7 +16,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public Optional<User> findUserById(Integer id) {
+    public Optional<User> findUserById(Long id) {
         return this.userRepository.findById(id);
     }
 

@@ -12,9 +12,11 @@ public class OrderDetailsDTO {
 
     private Integer id;
 
-    private Integer userId;
+    private Long userId;
 
     private OrderDigest digest;
+
+    public OrderDetailsDTO(){}
 
     public OrderDetailsDTO(Order order){
         this.id = order.getId();

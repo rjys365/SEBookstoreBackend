@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public Optional<Order> createOrderFromUserCartItems(Integer userId, UUID uuid) {
+    public Optional<Order> createOrderFromUserCartItems(Long userId, UUID uuid) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         if(userOptional.isEmpty())return Optional.empty();
         User user=userOptional.get();
@@ -134,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(value = Transactional.TxType.REQUIRED)
-    public Optional<Order> createOrderFromItem(Integer userId, Integer bookId, Integer quantity, UUID uuid) {
+    public Optional<Order> createOrderFromItem(Long userId, Integer bookId, Integer quantity, UUID uuid) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         if(userOptional.isEmpty())return Optional.empty();
         User user=userOptional.get();

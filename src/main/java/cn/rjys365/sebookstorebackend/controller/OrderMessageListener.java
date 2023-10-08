@@ -22,14 +22,14 @@ public class OrderMessageListener {
     public void listenOrder(OrderRequest orderRequest) {
         if (orderRequest.getUserId() == null) return;
         if (orderRequest.getBookId() == null) {
-            var orderOptional= this.orderService.createOrderFromUserCartItems(orderRequest.getUserId().intValue(), orderRequest.getUuid());
+            var orderOptional= this.orderService.createOrderFromUserCartItems(orderRequest.getUserId(), orderRequest.getUuid());
             if(orderOptional.isPresent()){
                 System.out.println("Order created from cart by user"+orderRequest.getUserId());
                 kafkaTemplate.send("order_response",new OrderDetailsDTO(orderOptional.get()));
             }
         }
         else {
-            var orderOptional=this.orderService.createOrderFromItem(orderRequest.getUserId().intValue(), orderRequest.getBookId().intValue(), 1, orderRequest.getUuid());
+            var orderOptional=this.orderService.createOrderFromItem(orderRequest.getUserId(), orderRequest.getBookId().intValue(), 1, orderRequest.getUuid());
             if(orderOptional.isPresent()){
                 System.out.println("Order created from item by user"+orderRequest.getUserId());
                 kafkaTemplate.send("order_response",new OrderDetailsDTO(orderOptional.get()));
