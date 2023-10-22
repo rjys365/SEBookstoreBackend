@@ -16,33 +16,6 @@ public class OrderDigest {
     private Long userId;
     private LocalDateTime createdTime;
 
-    public Integer getId() {
-        return this.id;
-    }
-
-    public Long getUserId() {
-        return this.userId;
-    }
-
-    public Integer getItemCount() {
-        return this.itemCount;
-    }
-
-    public Double getTotalPrice() {
-        return this.totalPrice;
-    }
-
-    public String getFirstItemTitle() {
-        return this.firstItemTitle;
-    }
-
-    //    public OrderDigest(Integer id,Integer itemCount,Double totalPrice,String firstItemTitle){
-//        this.id = id;
-//        this.itemCount = itemCount;
-//        this.totalPrice = totalPrice;
-//        this.firstItemTitle = firstItemTitle;
-//    }
-
     public OrderDigest(){}
     public OrderDigest(Order order) {
         this.id = order.getId();
