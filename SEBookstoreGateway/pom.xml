@@ -9,18 +9,22 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cn.rjys365</groupId>
-    <artifactId>SEBookstoreEurekaServer</artifactId>
+    <artifactId>SEBookstoreGateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>SEBookstoreEurekaServer</name>
-    <description>SEBookstoreEurekaServer</description>
+    <name>SEBookstoreGateway</name>
+    <description>SEBookstoreGateway</description>
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2022.0.4</spring-cloud.version>
     </properties>
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
 
         <dependency>
@@ -29,8 +33,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>
