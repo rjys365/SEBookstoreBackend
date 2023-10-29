@@ -9,6 +9,7 @@ import cn.rjys365.sebookstorebackend.entities.CartItem;
 import cn.rjys365.sebookstorebackend.entities.User;
 import cn.rjys365.sebookstorebackend.entities.UserAuth;
 import cn.rjys365.sebookstorebackend.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -92,6 +93,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Optional<List<CartItem>> setUserCartItems(Long userId, List<CartItem> cart) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         if (userOptional.isEmpty()) return Optional.empty();
@@ -103,6 +105,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(value = Transactional.TxType.REQUIRED)
     public Optional<List<CartItem>> addUserCartItem(Long userId, Integer bookId, Integer count) {
         Optional<User> userOptional = userDAO.findUserById(userId);
         Optional<Book> bookOptional = bookDAO.getBookById(bookId);
@@ -111,7 +114,7 @@ public class UserServiceImpl implements UserService {
         Book book = bookOptional.get();
         List<CartItem> cartItems = user.getCartItems();
         for (CartItem cartItem : cartItems) {
-            if (cartItem.getBook().equals(book)) {
+            if (cartItem.getBook().getId().equals(book.getId())) {
                 int newQuantity = cartItem.getQuantity() + count;
                 if (newQuantity < 0) return Optional.empty();
                 if (newQuantity == 0) {
@@ -134,6 +137,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Optional<List<CartItem>> setUserCartItem(Long userId, Integer bookId, Integer count) {
         if (count < 0) return Optional.empty();
         Optional<User> userOptional = userDAO.findUserById(userId);
@@ -143,7 +147,7 @@ public class UserServiceImpl implements UserService {
         Book book = bookOptional.get();
         List<CartItem> cartItems = user.getCartItems();
         for (CartItem cartItem : cartItems) {
-            if (cartItem.getBook().equals(book)) {
+            if (cartItem.getBook().getId().equals(book.getId())) {
                 if (count == 0) cartItems.remove(cartItem);
                 else cartItem.setQuantity(count);
                 user.setCartItems(cartItems);
