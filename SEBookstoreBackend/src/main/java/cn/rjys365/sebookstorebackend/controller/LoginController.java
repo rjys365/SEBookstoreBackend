@@ -11,7 +11,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Controller
 @Scope(value = WebApplicationContext.SCOPE_SESSION)
 @RequestMapping("/login")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class LoginController {
     private final LoginService loginService;
 

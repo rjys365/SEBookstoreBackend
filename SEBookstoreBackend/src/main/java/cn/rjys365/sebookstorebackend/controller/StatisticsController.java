@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/statistics/")
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
 public class StatisticsController {
     private final StatisticsService statisticsService;
 
