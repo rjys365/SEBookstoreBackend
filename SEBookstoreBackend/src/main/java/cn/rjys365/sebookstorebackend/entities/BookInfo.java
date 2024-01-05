@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
 import java.util.Map;
 
 @Document(collection = "book_info")
@@ -20,6 +21,8 @@ public class BookInfo {
 //    private Binary coverImage;
 
     private Map<String, String> extraInfo;
+
+    private List<String> tags;
 
     public BookInfo(){
     }

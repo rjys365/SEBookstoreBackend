@@ -39,6 +39,7 @@ public class BookDAOImpl implements BookDAO {
                 var bookInfo = new BookInfo();
                 bookInfo.setId(book.getId());
                 bookInfo.setExtraInfo(new HashMap<>());
+                bookInfo.setTags(new ArrayList<>());
                 this.bookMongoRepository.save(bookInfo);
                 book.setBookInfo(bookInfo);
             }
@@ -60,6 +61,7 @@ public class BookDAOImpl implements BookDAO {
                 var bookInfo = new BookInfo();
                 bookInfo.setId(book.getId());
                 bookInfo.setExtraInfo(new HashMap<>());
+                bookInfo.setTags(new ArrayList<>());
                 this.bookMongoRepository.save(bookInfo);
                 book.setBookInfo(bookInfo);
             }
@@ -77,6 +79,7 @@ public class BookDAOImpl implements BookDAO {
                 bookInfo = new BookInfo();
                 bookInfo.setId(book.getId());
                 bookInfo.setExtraInfo(new HashMap<>());
+                bookInfo.setTags(new ArrayList<>());
             }
             this.bookMongoRepository.save(bookInfo);
             return Optional.of(bookRepository.save(book));
