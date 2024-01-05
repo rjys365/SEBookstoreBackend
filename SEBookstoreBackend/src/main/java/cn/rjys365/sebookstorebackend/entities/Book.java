@@ -1,13 +1,16 @@
 package cn.rjys365.sebookstorebackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @Setter
 @EqualsAndHashCode
 @Table(name="books")
@@ -38,37 +41,17 @@ public class Book {
     @Column(name="image_url")//TODO:implement image upload
     private String image;
 
+    @Transient
+//    @JsonIgnore
+    private BookInfo bookInfo;
+
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<CartItem> cartItems = new ArrayList<>();
-    public Integer getId(){
-        return this.id;
-    }
-    public String getTitle(){
-        return this.title;
-    }
-    public String getAuthor(){
-        return this.author;
-    }
 
-    public String getPublisher(){
-        return this.publisher;
-    }
+    public Book(){}
 
-    public Integer getStock(){
-        return this.stock;
-    }
-
-    public Double getPrice(){
-        return this.price;
-    }
-
-    public String getIntroduction(){
-        return this.introduction;
-    }
-
-    public String getImage(){return this.image;}
-
-//    public Book(Integer id,String title,String author,String publisher,Integer stock,Double price,String image,String introduction){
+    //    public Book(Integer id,String title,String author,String publisher,Integer stock,Double price,String image,String introduction){
 //        this.id = id;
 //        this.title = title;
 //        this.author = author;
