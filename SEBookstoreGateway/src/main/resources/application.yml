@@ -17,7 +17,7 @@ spring:
         - id: bookstore_backend
           uri: lb://bookstore-backend
           predicates:
-            - Path=/books/**, /orders/**, /users/**, /carts/**, /login/**, /orders/**, /statistics/**
+            - Path=/books/**, /orders/**, /users/**, /carts/**, /login/**, /orders/**, /statistics/**, /graphql
         - id: bookstore_backend_websocket
           uri: lb:ws://bookstore-backend
           predicates:

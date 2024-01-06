@@ -24,6 +24,11 @@ public class BookServiceImpl implements BookService {
         return this.bookDAO.getAllBooks();
     }
 
+    @Override
+    public List<Book> findBookByTitleContaining(String title) {
+        return this.bookDAO.getBooksWithTitleContaining(title);
+    }
+
     public Optional<Book> getBookById(Integer id) {
         return this.bookDAO.getBookById(id);
     }

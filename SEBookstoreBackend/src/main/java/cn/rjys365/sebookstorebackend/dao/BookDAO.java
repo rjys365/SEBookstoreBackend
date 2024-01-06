@@ -11,4 +11,5 @@ public interface BookDAO {
     Optional<Book> saveBook(Book book);
     Boolean deleteBook(Book book);
     List<Book> getBooksWithTags(List<String> tags);
+    List<Book> getBooksWithTitleContaining(String title);
 }

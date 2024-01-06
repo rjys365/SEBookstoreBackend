@@ -31,17 +31,7 @@ public class BookDAOImpl implements BookDAO {
         Iterable<Book> allBooks = this.bookRepository.findAll();
         List<Book> books = new ArrayList<>();
         for (Book book : allBooks) {
-            Optional<BookInfo> bookInfoOptional = this.bookMongoRepository.findById(book.getId());
-            if (bookInfoOptional.isPresent()) {
-                book.setBookInfo(bookInfoOptional.get());
-            } else {
-                var bookInfo = new BookInfo();
-                bookInfo.setId(book.getId());
-                bookInfo.setExtraInfo(new HashMap<>());
-                bookInfo.setTags(new ArrayList<>());
-                this.bookMongoRepository.save(bookInfo);
-                book.setBookInfo(bookInfo);
-            }
+            fillBookInfo(book);
             books.add(book);
         }
         return books;
@@ -53,21 +43,25 @@ public class BookDAOImpl implements BookDAO {
         var bookOptional = this.bookRepository.findById(id);
         if (bookOptional.isPresent()) {
             Book book = bookOptional.get();
-            Optional<BookInfo> bookInfoOptional = this.bookMongoRepository.findById(book.getId());
-            if (bookInfoOptional.isPresent()) {
-                book.setBookInfo(bookInfoOptional.get());
-            } else {
-                var bookInfo = new BookInfo();
-                bookInfo.setId(book.getId());
-                bookInfo.setExtraInfo(new HashMap<>());
-                bookInfo.setTags(new ArrayList<>());
-                this.bookMongoRepository.save(bookInfo);
-                book.setBookInfo(bookInfo);
-            }
+            fillBookInfo(book);
             return Optional.of(book);
         }
 
         return Optional.empty();
+    }
+
+    private void fillBookInfo(Book book) {
+        Optional<BookInfo> bookInfoOptional = this.bookMongoRepository.findById(book.getId());
+        if (bookInfoOptional.isPresent()) {
+            book.setBookInfo(bookInfoOptional.get());
+        } else {
+            BookInfo bookInfo = new BookInfo();
+            bookInfo.setId(book.getId());
+            bookInfo.setExtraInfo(new HashMap<>());
+            bookInfo.setTags(new ArrayList<>());
+            this.bookMongoRepository.save(bookInfo);
+            book.setBookInfo(bookInfo);
+        }
     }
 
     @CachePut(value = "book", key = "#book.id")
@@ -113,6 +107,15 @@ public class BookDAOImpl implements BookDAO {
                 book.setBookInfo(bookInfo);
                 books.add(book);
             }
+        }
+        return books;
+    }
+
+    @Override
+    public List<Book> getBooksWithTitleContaining(String title) {
+        List<Book> books = this.bookRepository.findBooksByTitleContainingIgnoreCase(title);
+        for (Book book : books) {
+            fillBookInfo(book);
         }
         return books;
     }

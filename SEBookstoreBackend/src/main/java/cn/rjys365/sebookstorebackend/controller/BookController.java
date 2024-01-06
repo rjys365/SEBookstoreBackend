@@ -1,7 +1,6 @@
 package cn.rjys365.sebookstorebackend.controller;
 
 import cn.rjys365.sebookstorebackend.entities.Book;
-//import cn.rjys365.sebookstorebackend.util.BookConst;
 
 import cn.rjys365.sebookstorebackend.entities.TagNode;
 import cn.rjys365.sebookstorebackend.service.BookService;
@@ -35,11 +34,6 @@ public class BookController {
 
     @GetMapping("/{id}")
     public Book getBookById(@PathVariable Integer id) {
-//        for (Book book : BookConst.books) {
-//            if (book.getId().equals(id)) {
-//                return book;
-//            }
-//        }
         Optional<Book> bookOptional=this.bookService.getBookById(id);
         if(bookOptional.isPresent()){
             return bookOptional.get();
@@ -84,5 +78,4 @@ public class BookController {
     public String helloWorld() {
         return "Hello World!";//test backend availability
     }
-
 }

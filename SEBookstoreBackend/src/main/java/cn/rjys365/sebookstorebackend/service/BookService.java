@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface BookService {
     Iterable<Book> getAllBooks();
 
+    List<Book> findBookByTitleContaining(String title);
+
     Optional<Book> getBookById(Integer id);
 
     Optional<Book> saveBook(Book book);
