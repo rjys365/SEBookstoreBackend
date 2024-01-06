@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BookTagGraphRepository extends Neo4jRepository<TagNode, Integer> {
     @Query("""
-            match (startTag:BookstoreTag)-[:BOOKSTORE_TAG_RELATED_TO]-{1,2}(endTag:BookstoreTag)
+            match (startTag:BookstoreTag)-[:BOOKSTORE_TAG_RELATED_TO]->{1,2}(endTag:BookstoreTag)
             where startTag.name = $name
             return endTag as tag
             union
