@@ -25,8 +25,7 @@ public class BookServiceImpl implements BookService {
     }
 
     public Optional<Book> getBookById(Integer id) {
-        var bookOptional = this.bookDAO.getBookById(id);
-        return bookOptional;
+        return this.bookDAO.getBookById(id);
     }
 
     @Override

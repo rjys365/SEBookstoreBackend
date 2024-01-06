@@ -17,8 +17,6 @@ public class TagDAOImpl implements TagDAO {
 
     @Override
     public List<TagNode> getRelatedTags(String name) {
-//        return this.bookTagGraphRepository.findAll();
-        List<TagNode> relatedTags= this.bookTagGraphRepository.getRelatedTags(name);
-        return relatedTags;
+        return this.bookTagGraphRepository.getRelatedTags(name);
     }
 }

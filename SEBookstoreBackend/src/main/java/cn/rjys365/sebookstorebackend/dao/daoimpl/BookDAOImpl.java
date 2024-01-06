@@ -8,7 +8,6 @@ import cn.rjys365.sebookstorebackend.repositories.BookRepository;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;

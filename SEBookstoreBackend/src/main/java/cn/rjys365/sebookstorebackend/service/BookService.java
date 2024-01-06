@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookService {
-    public Iterable<Book> getAllBooks();
+    Iterable<Book> getAllBooks();
 
-    public Optional<Book> getBookById(Integer id);
+    Optional<Book> getBookById(Integer id);
 
-    public Optional<Book> saveBook(Book book);
+    Optional<Book> saveBook(Book book);
 
-    public Boolean deleteBookById(Integer bookId);
+    Boolean deleteBookById(Integer bookId);
 
     List<TagNode> getRelatedTags(String name);
 
