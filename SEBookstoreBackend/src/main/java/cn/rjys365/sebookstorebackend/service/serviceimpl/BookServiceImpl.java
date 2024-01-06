@@ -50,7 +50,8 @@ public class BookServiceImpl implements BookService {
         List<TagNode> relatedTags = this.tagDAO.getRelatedTags(name);
         if (!relatedTags.isEmpty()) {
             return this.bookDAO.getBooksWithTags(relatedTags.stream().map(TagNode::getName).toList());
+        } else {
+            return this.bookDAO.getBooksWithTags(List.of(name));
         }
-        return null;
     }
 }
