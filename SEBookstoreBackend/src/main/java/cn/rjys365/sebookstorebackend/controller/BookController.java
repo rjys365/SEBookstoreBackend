@@ -75,6 +75,11 @@ public class BookController {
         return this.bookService.getRelatedTags(name).stream().map(TagNode::getName).toList();
     }
 
+    @GetMapping("/withrelatedtags/{name}")
+    public List<Book> getBooksWithRelatedTags(@PathVariable String name){
+        return this.bookService.getBooksWithRelatedTags(name);
+    }
+
     @GetMapping("/helloworld")
     public String helloWorld() {
         return "Hello World!";//test backend availability

@@ -102,4 +102,19 @@ public class BookDAOImpl implements BookDAO {
             return false;
         }
     }
+
+    @Override
+    public List<Book> getBooksWithTags(List<String> tags) {
+        List<BookInfo> bookInfos = this.bookMongoRepository.findByTagsIn(tags);
+        List<Book> books = new ArrayList<>();
+        for (BookInfo bookInfo : bookInfos) {
+            Optional<Book> bookOptional = this.bookRepository.findById(bookInfo.getId());
+            if (bookOptional.isPresent()) {
+                Book book = bookOptional.get();
+                book.setBookInfo(bookInfo);
+                books.add(book);
+            }
+        }
+        return books;
+    }
 }

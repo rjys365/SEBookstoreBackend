@@ -16,4 +16,6 @@ public interface BookService {
     public Boolean deleteBookById(Integer bookId);
 
     List<TagNode> getRelatedTags(String name);
+
+    List<Book> getBooksWithRelatedTags(String name);
 }

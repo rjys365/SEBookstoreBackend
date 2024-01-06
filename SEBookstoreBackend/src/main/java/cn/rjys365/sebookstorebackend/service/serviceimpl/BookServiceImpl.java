@@ -45,4 +45,13 @@ public class BookServiceImpl implements BookService {
     public List<TagNode> getRelatedTags(String name) {
         return this.tagDAO.getRelatedTags(name);
     }
+
+    @Override
+    public List<Book> getBooksWithRelatedTags(String name) {
+        List<TagNode> relatedTags = this.tagDAO.getRelatedTags(name);
+        if (!relatedTags.isEmpty()) {
+            return this.bookDAO.getBooksWithTags(relatedTags.stream().map(TagNode::getName).toList());
+        }
+        return null;
+    }
 }
