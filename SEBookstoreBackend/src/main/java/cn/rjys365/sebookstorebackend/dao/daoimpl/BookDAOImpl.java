@@ -74,15 +74,17 @@ public class BookDAOImpl implements BookDAO {
     @CachePut(value = "book", key = "#book.id")
     public Optional<Book> saveBook(Book book) {
         try {
-            BookInfo bookInfo = this.bookMongoRepository.findById(book.getId()).orElse(null);
+            BookInfo bookInfo = book.getBookInfo();
             if (bookInfo == null) {
                 bookInfo = new BookInfo();
-                bookInfo.setId(book.getId());
                 bookInfo.setExtraInfo(new HashMap<>());
                 bookInfo.setTags(new ArrayList<>());
             }
+            bookRepository.save(book);
+            bookInfo.setId(book.getId());
             this.bookMongoRepository.save(bookInfo);
-            return Optional.of(bookRepository.save(book));
+            book.setBookInfo(bookInfo);
+            return Optional.of(book);
         } catch (Throwable e) {
             return Optional.empty();
         }
