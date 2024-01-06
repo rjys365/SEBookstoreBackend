@@ -3,12 +3,14 @@ package cn.rjys365.sebookstorebackend.controller;
 import cn.rjys365.sebookstorebackend.entities.Book;
 //import cn.rjys365.sebookstorebackend.util.BookConst;
 
+import cn.rjys365.sebookstorebackend.entities.TagNode;
 import cn.rjys365.sebookstorebackend.service.BookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -66,6 +68,11 @@ public class BookController {
         Boolean success = bookService.deleteBookById(id);
         if(success)return ResponseEntity.ok(true);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+    }
+
+    @GetMapping("/relatedtags/{name}")
+    public List<String> getRelatedTags(@PathVariable String name){
+        return this.bookService.getRelatedTags(name).stream().map(TagNode::getName).toList();
     }
 
     @GetMapping("/helloworld")
