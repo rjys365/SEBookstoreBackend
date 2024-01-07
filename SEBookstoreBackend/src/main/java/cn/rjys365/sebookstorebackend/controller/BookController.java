@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 
 @RestController
@@ -72,6 +74,11 @@ public class BookController {
     @GetMapping("/withrelatedtags/{name}")
     public List<Book> getBooksWithRelatedTags(@PathVariable String name){
         return this.bookService.getBooksWithRelatedTags(name);
+    }
+
+    @PostMapping("/wordcount/")
+    public Map<String, Map<String, Integer>> getWordCountByCategories(@RequestBody Set<String> wordsToCount){
+        return this.bookService.getWordCountByCategories(wordsToCount);
     }
 
     @GetMapping("/helloworld")

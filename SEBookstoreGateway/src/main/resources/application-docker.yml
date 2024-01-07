@@ -1,0 +1,44 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:8761/eureka/
+  instance:
+    hostname: localhost
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+      routes:
+        - id: bookstore_backend
+          uri: lb://bookstore-backend
+          predicates:
+            - Path=/books/**, /orders/**, /users/**, /carts/**, /login/**, /orders/**, /statistics/**, /graphql
+        - id: bookstore_backend_websocket
+          uri: lb:ws://bookstore-backend
+          predicates:
+            - Path=/websocket/**
+        - id: bookstore_search_service
+          uri: lb://bookstore-search-service
+          predicates:
+            - Path=/search/**
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+            allowedHeaders: "*"
+            allowCredentials: true
+
+server:
+  port: 8080

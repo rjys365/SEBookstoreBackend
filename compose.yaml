@@ -9,6 +9,7 @@ services:
       - backend-network
     depends_on:
       - mysql
+      - kafka
 #        condition: service_healthy
   mysql:
     image: "mysql:8"
@@ -52,6 +53,33 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     networks:
       - backend-network
+  eureka:
+    build: ./SEBookstoreEurekaServer
+    ports:
+      - "8761:8761"
+    networks:
+      - backend-network
+  gateway:
+    build: ./SEBookstoreGateway/
+    ports:
+      - "8080:8080"
+    networks:
+      - backend-network
+    depends_on:
+      - eureka
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  search-service:
+    build: ./SEBookstoreSearchService/
+    ports:
+      - "8081:8081"
+    networks:
+      - backend-network
+    depends_on:
+      - eureka
+      - mysql
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
 networks:
   backend-network:
     driver: bridge

@@ -16,6 +16,8 @@
     <properties>
         <java.version>17</java.version>
         <spring-cloud.version>2022.0.4</spring-cloud.version>
+        <jakarta-servlet.version>4.0.4</jakarta-servlet.version>
+        <jersey.version>2.41</jersey.version>
     </properties>
     <dependencies>
         <dependency>
@@ -75,6 +77,11 @@
             <artifactId>spring-boot-starter-graphql</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.13</artifactId>
+            <version>3.5.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
@@ -103,6 +110,9 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <imageName>bookstore_backend</imageName>
+                    <jvmArguments>
+                        --add-exports java.base/sun.nio.ch=ALL-UNNAMED
+                    </jvmArguments>
                 </configuration>
             </plugin>
         </plugins>

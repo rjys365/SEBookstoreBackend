@@ -4,7 +4,9 @@ import cn.rjys365.sebookstorebackend.entities.Book;
 import cn.rjys365.sebookstorebackend.entities.TagNode;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public interface BookService {
     Iterable<Book> getAllBooks();
@@ -20,4 +22,6 @@ public interface BookService {
     List<TagNode> getRelatedTags(String name);
 
     List<Book> getBooksWithRelatedTags(String name);
+
+    Map<String, Map<String, Integer>> getWordCountByCategories(Set<String> wordsToCount);
 }
